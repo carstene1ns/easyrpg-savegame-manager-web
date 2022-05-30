@@ -17,7 +17,11 @@ target_link_libraries(ESMW nanogui ${NANOGUI_EXTRA_LIBS})
 set_property(TARGET ESMW PROPERTY CXX_STANDARD 17)
 
 if(EMSCRIPTEN)
-	set_target_properties(ESMW PROPERTIES
-		LINK_FLAGS "-s EXPORTED_RUNTIME_METHODS=['ccall','cwrap'] --bind -s MALLOC=emmalloc -s WASM_BIGINT=1 -s USE_GLFW=3 -s ALLOW_MEMORY_GROWTH=1")
+	target_link_libraries(ESMW idbfs.js)
+	set_property(TARGET ESMW PROPERTY LINK_OPTIONS "-s USE_GLFW=3")
 	set(CMAKE_EXECUTABLE_SUFFIX ".html")
+
+	# debug
+	set_property(TARGET ESMW APPEND PROPERTY LINK_OPTIONS
+		"-s ASSERTIONS=2 -s ALLOW_MEMORY_GROWTH=1 -s DEMANGLE_SUPPORT -g")
 endif()
